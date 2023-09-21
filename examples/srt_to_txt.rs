@@ -60,7 +60,7 @@ fn srt_to_txt(srt_file_path: &str, output_path: &str) -> Result<(), Box<dyn std:
             for error in errors {
                 eprintln!("Error: {}", error);
             }
-            return Ok(());
+            return Err(format!("Couldn't parse subtitles file {}", srt_file_path).into());
         }
     };
 
@@ -72,19 +72,20 @@ fn srt_to_txt(srt_file_path: &str, output_path: &str) -> Result<(), Box<dyn std:
     Ok(())
 }
 
-fn run() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let srt_files = get_srt_files()?;
     for srt_file in srt_files {
-        let txt_output_path = format!("{}.txt", srt_file.file_stem().unwrap().to_str().unwrap());
-        srt_to_txt(srt_file.to_str().unwrap(), &txt_output_path)?;
-        println!("Conversion successful for {}", srt_file.display());
+        let file_name = srt_file.file_stem().unwrap().to_str().unwrap();
+        let txt_output_path = format!("{}.txt", file_name);
+        match srt_to_txt(srt_file.to_str().unwrap(), &txt_output_path) {
+            Ok(_) => {
+                println!("Conversion successful for {}", file_name)
+            }
+            Err(err) => {
+                eprintln!("Error: {}", err)
+            }
+        };
     }
 
     Ok(())
-}
-
-fn main() {
-    if let Err(e) = run() {
-        eprintln!("Error: {}", e);
-    }
 }
