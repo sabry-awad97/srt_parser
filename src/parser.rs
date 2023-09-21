@@ -1,6 +1,9 @@
+use std::path::Path;
+
 use crate::{
     subtitle::Subtitle,
     traits::{Parseable, SubtitleParser},
+    utils::from_file,
     ParseError,
 };
 
@@ -51,5 +54,32 @@ impl SrtParser {
     /// ```
     pub fn parse(srt_content: &str) -> Result<Vec<Subtitle>, Vec<ParseError>> {
         <Self as SubtitleParser>::parse(srt_content)
+    }
+}
+
+/// Parses the content of an SRT file and returns a vector of Subtitles.
+///
+/// # Arguments
+///
+/// * `path` - A path to the SRT file.
+///
+/// # Returns
+///
+/// * `Result<Vec<Subtitle>, Vec<ParseError>>` - A Result containing a vector of Subtitles, or a vector of parsing errors.
+///
+/// # Example
+///
+/// ```
+/// # use srt_parser::parse_srt_file;
+/// let result = parse_srt_file("path/to/your/file.srt");
+/// assert!(result.is_ok());
+/// ```
+pub fn parse_srt_file<P>(path: P) -> Result<Vec<Subtitle>, Vec<ParseError>>
+where
+    P: AsRef<Path>,
+{
+    match from_file(path) {
+        Ok(content) => SrtParser::parse(&content),
+        Err(error) => Err(vec![ParseError::IoError(error)]),
     }
 }

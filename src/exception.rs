@@ -1,3 +1,5 @@
+use std::io;
+
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -8,4 +10,6 @@ pub enum ParseError {
     InvalidTimecode(String),
     #[error("Missing fields")]
     MissingFields,
+    #[error("IO error: {0}")]
+    IoError(io::Error),
 }
