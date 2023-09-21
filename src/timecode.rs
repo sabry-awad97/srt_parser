@@ -50,3 +50,36 @@ impl Parseable for Timecode {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_valid_timecode() {
+        let input = "12:34:56,789";
+        let result = Timecode::parse(input);
+        assert!(result.is_ok(), "Expected Ok, got {:?}", result);
+    }
+
+    #[test]
+    fn test_invalid_input() {
+        let input = "12:34:56,789:";
+        let result = Timecode::parse(input);
+        assert!(result.is_err(), "Expected Err, got {:?}", result);
+    }
+
+    #[test]
+    fn test_invalid_parts_count() {
+        let input = "12:34:56";
+        let result = Timecode::parse(input);
+        assert!(result.is_err(), "Expected Err, got {:?}", result);
+    }
+
+    #[test]
+    fn test_invalid_time_values() {
+        let input = "25:61:61,1000";
+        let result = Timecode::parse(input);
+        assert!(result.is_err(), "Expected Err, got {:?}", result);
+    }
+}
