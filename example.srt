@@ -1,0 +1,9 @@
+1
+01:02:03,456 --> 02:03:04,567
+This is an example of
+a subtitle - 1st subtitle.
+
+2
+03:04:05,678 --> 04:05:06,789
+This is an example of
+a subtitle - 2nd subtitle.
