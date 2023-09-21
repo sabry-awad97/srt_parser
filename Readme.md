@@ -70,7 +70,7 @@ fn main() {
 
 ## Example
 
-For a complete example, refer to the [`example`](./example) directory in this repository.
+For a complete example, refer to the [`examples`](./examples) directory in this repository.
 
 ## Contributing
 
