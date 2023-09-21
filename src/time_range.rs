@@ -26,3 +26,43 @@ impl Parseable for TimeRange {
         Ok(Self { start, end })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_valid_time_range() {
+        let input = "00:00:01,000 --> 00:00:04,000";
+        let result = TimeRange::parse(input);
+        assert!(result.is_ok(), "Expected Ok, got {:?}", result);
+    }
+
+    #[test]
+    fn test_invalid_input() {
+        let input = "00:00:01,000 -> 00:00:04,000";
+        let result = TimeRange::parse(input);
+        assert!(result.is_err(), "Expected Err, got {:?}", result);
+    }
+
+    #[test]
+    fn test_invalid_parts_count() {
+        let input = "00:00:01,000";
+        let result = TimeRange::parse(input);
+        assert!(result.is_err(), "Expected Err, got {:?}", result);
+    }
+
+    #[test]
+    fn test_invalid_timecode_format() {
+        let input = "00:00:01.000 --> 00:00:04.000";
+        let result = TimeRange::parse(input);
+        assert!(result.is_err(), "Expected Err, got {:?}", result);
+    }
+
+    #[test]
+    fn test_invalid_timecode_values() {
+        let input = "00:60:60,1000 --> 00:00:04,000";
+        let result = TimeRange::parse(input);
+        assert!(result.is_err(), "Expected Err, got {:?}", result);
+    }
+}
