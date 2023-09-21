@@ -14,6 +14,7 @@ impl SubtitleParser for SrtParser {
         let mut errors = Vec::new();
         let subtitles: Vec<Subtitle> = srt_content
             .replace("\r\n", "\n")
+            .trim()
             .split("\n\n")
             .filter_map(|s| match Parseable::parse(s) {
                 Ok(subtitle) => Some(subtitle),
@@ -71,7 +72,7 @@ impl SrtParser {
 ///
 /// ```
 /// # use srt_parser::parse_srt_file;
-/// let result = parse_srt_file("path/to/your/file.srt");
+/// let result = parse_srt_file("example.srt");
 /// assert!(result.is_ok());
 /// ```
 pub fn parse_srt_file<P>(path: P) -> Result<Vec<Subtitle>, Vec<ParseError>>
