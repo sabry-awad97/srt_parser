@@ -39,3 +39,43 @@ impl Parseable for Subtitle {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_valid_subtitle() {
+        let input = "1\n00:00:01,000 --> 00:00:04,000\nExample subtitle line.";
+        let result = Subtitle::parse(input);
+        assert!(result.is_ok(), "Expected Ok, got {:?}", result);
+    }
+
+    #[test]
+    fn test_invalid_input() {
+        let input = "1\n00:00:01,000 --> 00:00:04,000";
+        let result = Subtitle::parse(input);
+        assert!(result.is_err(), "Expected Err, got {:?}", result);
+    }
+
+    #[test]
+    fn test_missing_fields() {
+        let input = "1";
+        let result = Subtitle::parse(input);
+        assert!(result.is_err(), "Expected Err, got {:?}", result);
+    }
+
+    #[test]
+    fn test_invalid_index() {
+        let input = "0\n00:00:01,000 --> 00:00:04,000\nExample subtitle line.";
+        let result = Subtitle::parse(input);
+        assert!(result.is_err(), "Expected Err, got {:?}", result);
+    }
+
+    #[test]
+    fn test_invalid_time_range() {
+        let input = "1\n00:00:01,000 -> 00:00:04,000\nExample subtitle line.";
+        let result = Subtitle::parse(input);
+        assert!(result.is_err(), "Expected Err, got {:?}", result);
+    }
+}
